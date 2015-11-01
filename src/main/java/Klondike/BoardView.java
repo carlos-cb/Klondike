@@ -1,10 +1,15 @@
 package Klondike;
 
+import java.util.ArrayList;
+
 public class BoardView {
 	
 	private Board board;
-	MoveControllerFactory moveControllerFactory;
-
+	DeckStack deck;
+	WasteStack waste;
+	ArrayList<SuiteStack> foundations;
+	ArrayList<SuiteView> suites;
+	
 	public BoardView(Board board) {
 		this.board = board;
 	}
@@ -13,42 +18,28 @@ public class BoardView {
 		IO io = new IO();
 		io.writeln("===========================");
 		io.write("Baraja: ");
-		if(board.sizeDeck()>0){
-			 io.write("[X,X] \n");
-		}else{
-			writeEmpty(io);
-		}
+		new DeckStack().render();
+		io.writeln();
 		io.write("Descarte: ");
-		if(board.sizeWaste()>0){
-			for(int i=0; i<board.sizeWaste();i++){
-				io.write("["+board.getWaste().peek().getValue()+","+board.getWaste().peek().getCardSuite()+"]");
-			}
-			io.write("\n");
-		}else{
-			writeEmpty(io);
+		new WasteStack().render();
+		io.writeln();
+		io.write("Palo oros: ");
+		new SuiteView(foundations.get(0)).render();
+		io.writeln();
+		io.write("Palo copas: ");
+		new SuiteView(foundations.get(1)).render();
+		io.writeln();
+		io.write("Palo espadas: ");
+		new SuiteView(foundations.get(2)).render();
+		io.writeln();
+		io.write("Palo bastos: ");
+		new SuiteView(foundations.get(3)).render();
+		io.writeln();
+		for (int i = 0; i < 7; i++) {
+			io.write("Escalera " + (i + 1) + ": ");	
+			io.writeln();
 		}
-		for(int i=0; i<4; i++){
-			io.write("Palo "+ board.getSuite(i).getName().toString()+": ");
-			if(board.getSuite(i).getSize()>1){
-				Card card = board.getSuite(i).getLastCard();
-				io.write("["+card.getValue()+","+card.getCardSuite()+"]");
-			}else{
-				writeEmpty(io);
-			}
-		}
-		for(int i=0; i<board.getTableaus().get(i).size(); i++){
-			Tableau escalera = board.getTableau();
-			if(escalera.size() == 0){
-				writeEmpty(io);
-			}
-			io.write("Escalera "+i+": ");
-			for(int j=0; j<escalera.getCoveredCards();j++){
-				io.write("[");
-			}
-			io.write("["+escalera.peek().getValue()+","+escalera.peek().getCardSuite()+"]\n");
-		}
+		io.writeln("---------------------------");
 	}
-	public void writeEmpty(IO io){
-		io.write("<vacío> \n");
-	}
+		
 }

@@ -2,13 +2,12 @@ package Klondike;
 
 import java.util.ArrayList;
 
-public class Suite extends CardStack{
-
-	private static final long serialVersionUID = 1L;
+public class SuiteStack extends CardStack{
 	private CardSuite suite;
 	private ArrayList<Card> cards;
+	private CardSuite cardSuite;
 	
-	public Suite(CardSuite suite) {
+	public SuiteStack(CardSuite suite) {
 		this.suite = suite;
 		cards = new ArrayList<Card>();
 	}
@@ -30,12 +29,21 @@ public class Suite extends CardStack{
 	}
 
 	@Override
-	public boolean canPush(Card card) {
-		if(this.isEmpty() && card.isFirst()) return true;
-		Card topCard = this.peek();
-		if(card.isSameColor(topCard) && card.isNext(topCard)){
+	public boolean isValidOnTop(Card card) {
+		if (!card.iscovered() || card.getCardSuite() != this.cardSuite) {
+			return false;
+		}
+	
+		if (this.isEmpty() && card.getNumber() == Number.AS) {
 			return true;
 		}
+		
+		if (!this.isEmpty() && 
+				this.viewCardFromTop().getNumber().getValue() < 
+					card.getNumber().getValue()) {
+			return true;
+		}
+		
 		return false;
 	}
 

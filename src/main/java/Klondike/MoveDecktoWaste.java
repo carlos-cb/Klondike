@@ -6,31 +6,33 @@ public class MoveDecktoWaste extends MoveController {
 		super(board);
 	}
 	
-	public boolean isPosibleMove(DeckStack deckStack, Waste waste) {
+	public boolean isPosibleMove(DeckStack deckStack, WasteStack waste) {
 		return board.sizeDeck() > 0;
 	}
 	
+	DeckStack deckStack;
+	WasteStack wasteStack;
 	
-	public  void move(DeckStack from, Waste to) {
-		assert board.sizeDeck() > 0;
-		from.peek().setCovered(false);
-		if(to.canPush(from.peek())){
-			to.push(from.pop());			
+	public  void move() {
+		for (int i = 0; i < WasteStack.MAX_SIZE; i++) {
+			Card card = deckStack.takeCardFromTop();
+			card.turnover();
+			wasteStack.putCardOnTop(card);			
 		}
-	}
-	
-	public boolean move(CardStack from, CardStack to) {
-		if(to.canPush(from.peek())){
-			to.push(from.pop());
-			return true;
-		}
-		return false;
 	}
 
 	@Override
 	public void getrender(View view) {
 		view.atender(this);
 		
+	}
+	
+	public boolean isDeckEmpty() {
+		return deckStack.isEmpty();
+	}
+
+	public boolean isWasteEmpty() {
+		return wasteStack.isEmpty();
 	}
 
 }

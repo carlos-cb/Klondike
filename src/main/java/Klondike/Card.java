@@ -2,29 +2,18 @@ package Klondike;
 
 public class Card {
 
-	public final static int max_score = 13;
-	public final static int min_score = 1;
-	public static final int max_cards = 24;
 	private CardSuite cardSuite;
 	boolean covered;
 	private int value;
-	private Color color;
+	private Number number;
 	
-	public Card(int value, CardSuite cardSuite){
-		this.value = value;
+	public Card(Number number, CardSuite cardSuite){
+		this.number = number;
 		this.cardSuite = cardSuite;
 		covered = true;
 	}
 	public boolean iscovered(){
-		return covered;
-	}
-	
-	public int getValue(){
-		return value;
-	}
-	
-	public void setValue(int value){
-		this.value = value;
+		return this.covered;
 	}
 	
 	public Card turnover(){
@@ -37,28 +26,29 @@ public class Card {
 	}
 	
 	public CardSuite getCardSuite(){
-		return cardSuite;
+		return this.cardSuite;
 	}
 	
 	public void setSuite(CardSuite cardSuite){
 		this.cardSuite = cardSuite;
 	}
-	
-	public boolean isSameColor(Card topCard) {
-		return Color.isSameColor(this, topCard);				
-	}
 
 	public boolean isFirst() {
 		return value == 1;
 	}
-	public Color getColor() {
-		return color;
-	}
-	public boolean isNext(Card topCard) {
-		return this.value == topCard.getValue()+1;
+	
+	public Number getNumber() {
+		return this.number;
 	}
 	
-	
+	public void render() {
+		IO io = new IO();
+		if (iscovered()) {
+			io.write("[" + getNumber() + "," + getCardSuite() + "]");
+		} else {
+			io.write("[X,X]");
+		}
+	}
 
 	
 	

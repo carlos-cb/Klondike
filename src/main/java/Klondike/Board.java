@@ -2,110 +2,57 @@ package Klondike;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.Stack;
 
-public class Board implements BoardForView{
+public class Board {
 
 	public static final int MAX_FOUNDATIONS_TABLEAU = 7;
 	public static final int MAX_FOUNDATIONS = 40;
 	private DeckStack deckStack;
-	private Waste waste;
-	private List<Tableau> tableaus;
-	private List<Suite> suite1;
+	private WasteStack waste;
+	private List<SuiteStack> tableaus;
+	private List<SuiteStack> suite1;
 	MoveControllerFactory moveControllerFactory;
-	public Suite[] suites;
+	public SuiteStack[] suites;
 	public static final int NUM_SUITS = 4;
 	public static final int FULL_CARD = 12;
-	private Tableau tableau;
+	private SuiteStack tableau;
 	
 	public Board(){
 		deckStack = new DeckStack();
 		
-		waste = new Waste();
+		waste = new WasteStack();
 		
-		tableaus = new ArrayList<Tableau>();
+		tableaus = new ArrayList<SuiteStack>();
 		for(int i=0;i<7;i++){
-			tableaus.add(new Tableau());
+			tableaus.add(new SuiteStack(null));
 		}
-		generateCards(deckStack,tableaus);
 		
-		suite1 = new ArrayList<Suite>();
+		suite1 = new ArrayList<SuiteStack>();
 		for(int i=0;i<4;i++){
-			suite1.add(new Suite(null));
+			suite1.add(new SuiteStack(null));
 		}
 			
-		suites = new Suite[NUM_SUITS];
-		suites[0] = new Suite(CardSuite.HEART);
-		suites[1] = new Suite(CardSuite.DIAMOND);
-		suites[2] = new Suite(CardSuite.SPADE);
-		suites[3] = new Suite(CardSuite.CLUB);
+		suites = new SuiteStack[NUM_SUITS];
+		suites[0] = new SuiteStack(CardSuite.HEART);
+		suites[1] = new SuiteStack(CardSuite.DIAMOND);
+		suites[2] = new SuiteStack(CardSuite.SPADE);
+		suites[3] = new SuiteStack(CardSuite.CLUB);
 
-	}
-	
-	private void generateCards(DeckStack deckStack, List<Tableau> tableaus) {
-		Stack<Card> allCards = new Stack<Card>();
-		
-		for(CardSuite cardSuite : CardSuite.values()){
-			for(int i=Card.min_score;i<=Card.max_score;i++){
-				allCards.push(new Card(i,cardSuite));
-			}
-		}
-		
-		Random random = new Random();	
-		while(deckStack.size()!=DeckStack.MAX_CARDS){
-			int randomOrder = random.nextInt(allCards.size());
-			if(allCards.get(randomOrder)!=null){
-				deckStack.push(allCards.get(randomOrder));
-				allCards.remove(randomOrder);
-			}				
-		}
-		
-		for(int i=0;i<7;i++){
-			while(tableaus.get(i).size()!=i+1){
-				int randomOrder = random.nextInt(allCards.size());
-				if(allCards.get(randomOrder)!=null){
-					tableaus.get(i).push(allCards.get(randomOrder));
-					allCards.remove(randomOrder);
-				}
-			}
-			tableaus.get(i).peek().setCovered(false);
-		}
-	}
-
-	public int sizeWaste() {
-		return waste.size();
 	}
 
 	public int sizeDeck() {
-		return deckStack.size();
+		return deckStack.getSize();
 	}
 
-	public ArrayList<Integer> sizeCoveredCardsStackTableaus() {
-		ArrayList<Integer> sizeCoveredCardsTableaus = new ArrayList<Integer>();
-		for(Tableau tableau : tableaus){
-			sizeCoveredCardsTableaus.add(tableau.getCoveredCards());
-		}
-		return sizeCoveredCardsTableaus;
-	}
-
-	public ArrayList<Stack<Card>> uncoveredCardsStackTableaus() {
-		ArrayList<Stack<Card>> uncoveredCardsStackTableaus = new ArrayList<Stack<Card>>();
-		for(Tableau tableau : tableaus){
-			uncoveredCardsStackTableaus.add(tableau.getUncoveredCards());
-		}
-		return uncoveredCardsStackTableaus;
-	}
-
-	public Tableau getTableau() {
+	public SuiteStack getTableau() {
 		return tableau;
 	}
 	
-	public List<Tableau> getTableaus() {
+	public List<SuiteStack> getTableaus() {
 		return tableaus;
 	}
 	
-	public Waste getWaste() {
+	public WasteStack getWaste() {
 		return waste;
 	}
 	
@@ -114,15 +61,8 @@ public class Board implements BoardForView{
 	}
 
 	
-	public Suite getSuite(int numSuit){
+	public SuiteStack getSuite(int numSuit){
 		return suites[numSuit];
-	}
-	
-
-	@Override
-	public Color getColor(Card card) {
-		assert card != null;
-		return card.getColor();
 	}
 
 	public boolean existKlondike() {
@@ -139,6 +79,10 @@ public class Board implements BoardForView{
 
 	public boolean isPosibleMove(int escalera) {
 		return false;
+	}
+
+	public int sizeWaste() {
+		return waste.getSize();
 	}
 
 }
